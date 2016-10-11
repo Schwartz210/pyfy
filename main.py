@@ -12,18 +12,25 @@ Key features:
 
 from yahoo_finance import Share
 from time import sleep
+from db_interface import execute_multiple_sql, add_record
 
-def pull(ticker, start_date, end_date):
+TIME_PERIOD = ('2014-04-25', '2016-04-25')
+
+def pull(ticker):
+    start_date, end_date = TIME_PERIOD
     try:
         stock = Share(ticker)
         return stock.get_historical(start_date, end_date)
     except:
         sleep(1)
-        return pull(ticker, start_date, end_date)
+        return pull(ticker)
 
 
+def load_into_database(ticker):
+    data = pull(ticker)
+    sql_requests = []
+    for record in data:
+        sql_request = add_record(record)
+        sql_requests.append(sql_request)
+    execute_multiple_sql(sql_requests)
 
-
-data = pull('GOOG','2014-04-25', '2016-04-29')
-for record in data:
-    print(record)

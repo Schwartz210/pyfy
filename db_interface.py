@@ -1,9 +1,9 @@
-__author__ = 'Avi'
+__author__ = 'Avi Schwartz - Schwartz210@gmail.com'
 from sqlite3 import connect
 DATABASE = 'test.db'
 
 def create_table():
-    sql_request = 'CREATE TABLE Stocks(ID INTEGER PRIMARY KEY AUTOINCREMENT, Open Decimal(15,15), Date DATE, Close Decimal(15,15), Low Decimal(15,15), Symbol VARCHAR(5), Adj_Close Decimal(15,15), Volume Integer, High Decimal(15,15))
+    sql_request = 'CREATE TABLE Stocks(ID INTEGER PRIMARY KEY AUTOINCREMENT, Open Decimal(15,15), Date DATE, Close Decimal(15,15), Low Decimal(15,15), Symbol VARCHAR(5), Adj_Close Decimal(15,15), Volume Integer, High Decimal(15,15))'
     execute_sql(sql_request)
 
 def execute_sql(SQL_request):
@@ -40,5 +40,22 @@ def pull_data(SQL_request):
         raise Exception('Not able to fulfill request')
 
 def add_record(record):
-    sql_request = 'INSERT INTO Stocks VALUES(NULL, "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")' % (record[0], record[1], record[2], record[3], record[4], record[5], record[6], record[7])
+    sql_request = 'INSERT INTO Stocks VALUES(NULL, "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s")' % (record['Open'], record['Date'], record['Close'], record['Low'], record['Symbol'], record['Adj_Close'], record['Volume'], record['High'])
     return sql_request
+
+def convert_list_of_lists_to_list(list_of_lists):
+    new_list = []
+    for lst in list_of_lists:
+        item = lst[0]
+        new_list.append(item)
+    return new_list
+
+def get_ticker_list():
+    messy_data = pull_data('SELECT DISTINCT Symbol FROM Stocks')
+    data = convert_list_of_lists_to_list(messy_data)
+    print(data)
+    for record in data:
+        print(record)
+
+get_ticker_list()
+
