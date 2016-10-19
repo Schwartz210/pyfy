@@ -53,9 +53,13 @@ def convert_list_of_lists_to_list(list_of_lists):
 def get_ticker_list():
     messy_data = pull_data('SELECT DISTINCT Symbol FROM Stocks')
     data = convert_list_of_lists_to_list(messy_data)
-    print(data)
-    for record in data:
-        print(record)
+    return data
 
-get_ticker_list()
+def get_date_close(symbol):
+    sql_request = 'SELECT Date, Close FROM Stocks WHERE Symbol="%s" LIMIT 10' % (symbol)
+    data = pull_data(sql_request)
+    dates = [record[0] for record in data]
+    close_amounts = [record[1] for record in data]
+    series = [dates, close_amounts]
+    return series
 
